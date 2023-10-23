@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_contract_overtime_form_inherit" model="ir.ui.view">
+        <field name="name">hr_contract_overtime</field>
+        <field name="model">hr.contract</field>
+        <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='information']" position="after">
+                <page string="Overtime">
+                    <group name="total_overtime" col="2">
+                        <label for="total_overtime"/>
+                        <div class="o_row" name="total_overtime">
+                            <field name="total_overtime" nolabel="1"/>
+                        </div>
+                    </group>
+
+                    <group>
+                        <group name="overtime_factor1" string="Overtime Factor(x1.5)">
+                            <field name="worked_hour1"/>
+                        </group>
+                        <group name="overtime_factor2" string="Overtime Factor(x1.75)">
+                            <field name="worked_hour2"/>
+                        </group>
+                        <group name="overtime_factor3" string="Overtime Factor(x2)">
+                            <field name="worked_hour3"/>
+                        </group>
+                        <group name="overtime_factor4" string="Overtime Factor(x2.5)">
+                            <field name="worked_hour4"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>
