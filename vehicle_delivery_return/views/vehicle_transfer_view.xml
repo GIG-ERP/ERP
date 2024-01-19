@@ -1,0 +1,428 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record model="ir.ui.view" id="vehicle_delivery_form_view">
+        <field name="name">vehicle.transfer.form.view</field>
+        <field name="model">vehicle.transfer</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button id="button_draft" name="action_draft" type="object" string="RESET TO DRAFT"
+                            groups="fleet.fleet_group_manager"
+                            states="cancel"
+                    />
+                    <button id="button_confirm" name="action_confirm" type="object" string="Confirm"
+                            groups="fleet.fleet_group_manager" class="btn-primary"
+                            states="draft"
+                            confirm="Are you sure you want to confirm this record? Proceed if you are sure about the entered data."
+                    />
+                    <button id="button_approve" name="action_approve" type="object" class="btn-primary"
+                            string="Approve" groups="fleet.fleet_group_user"
+                            states="confirm"
+                            confirm="Are you sure you want to approve this record? Proceed if you agree about the entered data."
+                    />
+                    <button id="button_cancel" name="action_cancel" type="object" string="Cancel"
+                            states="draft,confirm,approve"
+                            confirm="Are you sure you want to cancel this record?"
+                    />
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirm,approve,close"/>
+                </header>
+
+                <sheet>
+                    <field name="image_128" widget='image' class="oe_avatar"/>
+                    <div>
+                        <h1>
+                            <field name="reference"/>
+                        </h1>
+                    </div>
+                    <group col="2">
+                        <group>
+                            <field name="transfer_type" widget="radio"
+                                   attrs="{'readonly': [('state', '!=', 'draft')]}"
+                            />
+                            <field name="vehicle_delivery_id"
+                                   attrs="{'invisible': [('transfer_type', '!=', 'return')], 'required': [('transfer_type', '=', 'return')], 'readonly': [('state', '!=', 'draft')]}"
+                                   domain="[('transfer_type', '=', 'delivery')]"/>
+                            <field name="vehicle_id" force_save="1"
+                                   attrs="{'readonly': ['|',('transfer_type', '=', ('return')), ('state', '!=','draft')]}"/>
+                            <field name="return_reference" invisible='1' force_save="1"/>
+                        </group>
+                    </group>
+                    <group col="2" string="Vehicle Information">
+                        <group>
+                            <field name="date" required='1' attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="driver_name" force_save="1" required='1'
+                            />
+                            <field name="license_plate" force_save="1" required='1'
+                            />
+                            <field name="model_brand" force_save="1" required='1'
+                            />
+                            <field name="model_year" force_save="1" required='1'
+                            />
+                        </group>
+                        <group>
+                            <field name="date_range"
+                                   attrs="{'invisible': [('transfer_type', '!=', 'return')]}"/>
+                            <field name="chassis_number" force_save="1" required='1'
+                            />
+                            <label for="last_odometer"/>
+                            <div class="o_row">
+                                <field name="last_odometer" class="oe_inline" required='1'
+                                       attrs="{'readonly': [('state', '!=', 'draft')]}"
+                                />
+                                <field name="odometer_unit" class="pl-1 pl-sm-0" force_save="1"
+                                />
+                            </div>
+                            <field name="motor_number" force_save="1" required='1'/>
+                            <field name="company_id" groups="base.group_multi_company" readonly="1"/>
+                        </group>
+                    </group>
+                    <group col="2" string="Criteria to Evaluate">
+                        <group>
+                            <field name="front_l_s_parking_light" attrs="{'readonly': [('state', '!=', 'draft')]}"
+                            />
+                            <field name="front_l_s_parking_light_note"
+                                   attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <separator/>
+                            <field name="front_r_s_parking_light" attrs="{'readonly': [('state', '!=', 'draft')]}"
+                            />
+                            <field name="front_r_s_parking_light_note"
+                                   attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <separator/>
+                            <field name="front_l_h_light" attrs="{'readonly': [('state', '!=', 'draft')]}"
+                            />
+                            <field name="front_l_h_light_note" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <separator/>
+                            <field name="front_r_h_light" attrs="{'readonly': [('state', '!=', 'draft')]}"
+                            />
+                            <field name="front_r_h_light_note" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <separator/>
+                            <field name="front_l_beam_light" attrs="{'readonly': [('state', '!=', 'draft')]}"
+                            />
+                            <field name="front_l_beam_light_note" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <separator/>
+                            <field name="front_r_beam_light" attrs="{'readonly': [('state', '!=', 'draft')]}"
+                            />
+                            <field name="front_r_beam_light_note" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <separator/>
+                            <field name="front_l_signal_light" attrs="{'readonly': [('state', '!=', 'draft')]}"
+                            />
+                            <field name="front_l_signal_light_note" attrs="{'readonly': [('state', '!=', 'draft')]}"
+                            />
+                            <separator/>
+                            <field name="front_r_signal_light" attrs="{'readonly': [('state', '!=', 'draft')]}"
+                            />
+                            <field name="front_r_signal_light_note" attrs="{'readonly': [('state', '!=', 'draft')]}"
+                            />
+                            <separator/>
+                            <field name="front_rl_side_big_light" attrs="{'readonly': [('state', '!=', 'draft')]}"
+                            />
+                            <field name="front_rl_side_big_light_note"
+                                   attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <separator/>
+                            <field name="front_bumper" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="front_bumper_note" attrs="{'readonly': [('state', '!=', 'draft')]}"
+                            />
+                            <separator/>
+                            <field name="radiator_cap" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="radiator_cap_note" attrs="{'readonly': [('state', '!=', 'draft')]}"
+                            />
+                            <separator/>
+                            <field name="motor_oil_cap" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="motor_oil_cap_note" attrs="{'readonly': [('state', '!=', 'draft')]}"
+                            />
+                            <separator/>
+                            <field name="motor_oil_label_check_up" attrs="{'readonly': [('state', '!=', 'draft')]}"
+                            />
+                            <field name="motor_oil_label_check_up_note"
+                                   attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <separator/>
+                            <field name="brake_oil_cap" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="brake_oil_cap_note" attrs="{'readonly': [('state', '!=', 'draft')]}"
+                            />
+                            <separator/>
+                            <field name="clutch_oil_cap" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="clutch_oil_cap_note" attrs="{'readonly': [('state', '!=', 'draft')]}"
+                            />
+                            <separator/>
+                            <field name="spare_wheel" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="spare_wheel_note" attrs="{'readonly': [('state', '!=', 'draft')]}"
+                            />
+                            <separator/>
+                            <field name="sun_in_side_visor" attrs="{'readonly': [('state', '!=', 'draft')]}"
+                            />
+                            <field name="sun_in_side_visor_note" attrs="{'readonly': [('state', '!=', 'draft')]}"
+                            />
+                            <separator/>
+                            <field name="door_glass_handle" attrs="{'readonly': [('state', '!=', 'draft')]}"
+                            />
+                            <field name="door_glass_handle_note" attrs="{'readonly': [('state', '!=', 'draft')]}"
+                            />
+                            <separator/>
+                            <field name="door_outer_opening_handle" attrs="{'readonly': [('state', '!=', 'draft')]}"
+                            />
+                            <field name="door_outer_opening_handle_note"
+                                   attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <separator/>
+                            <field name="jack_with_accessories" attrs="{'readonly': [('state', '!=', 'draft')]}"
+                            />
+                            <field name="jack_with_accessories_note" attrs="{'readonly': [('state', '!=', 'draft')]}"
+                            />
+                            <separator/>
+                            <field name="plate_no_light" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="plate_no_light_note" attrs="{'readonly': [('state', '!=', 'draft')]}"
+                            />
+                            <separator/>
+                            <field name="rear_bumper" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="rear_bumper_note" attrs="{'readonly': [('state', '!=', 'draft')]}"
+                            />
+                            <separator/>
+                            <field name="fuel_tanker_cap" attrs="{'readonly': [('state', '!=', 'draft')]}"
+                            />
+                            <field name="fuel_tanker_cap_note" attrs="{'readonly': [('state', '!=', 'draft')]}"
+                            />
+                            <separator/>
+                            <field name="wheel_cover_front" attrs="{'readonly': [('state', '!=', 'draft')]}"
+                            />
+                            <field name="wheel_cover_front_note" attrs="{'readonly': [('state', '!=', 'draft')]}"
+                            />
+                            <separator/>
+                            <field name="wheel_cover_rear" attrs="{'readonly': [('state', '!=', 'draft')]}"
+                            />
+                            <field name="wheel_cover_rear_note" attrs="{'readonly': [('state', '!=', 'draft')]}"
+                            />
+                            <separator/>
+                            <field name="horn" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="horn_note" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <separator/>
+                        </group>
+
+                        <!--                        second column-->
+                        <group>
+                            <field name="wheel_oil_cap" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="wheel_oil_cap_note" attrs="{'readonly': [('state', '!=', 'draft')]}"
+                            />
+                            <separator/>
+                            <field name="battery_type" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="battery_type_note" attrs="{'readonly': [('state', '!=', 'draft')]}"
+                            />
+                            <separator/>
+                            <field name="mirror_view_ls" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="mirror_view_ls_note" attrs="{'readonly': [('state', '!=', 'draft')]}"
+                            />
+                            <separator/>
+                            <field name="mirror_view_rs" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="mirror_view_rs_note" attrs="{'readonly': [('state', '!=', 'draft')]}"
+                            />
+                            <separator/>
+                            <field name="mirror_view_inside" attrs="{'readonly': [('state', '!=', 'draft')]}"
+                            />
+                            <field name="mirror_view_inside_note" attrs="{'readonly': [('state', '!=', 'draft')]}"
+                            />
+                            <separator/>
+                            <field name="wiper_front_side" attrs="{'readonly': [('state', '!=', 'draft')]}"
+                            />
+                            <field name="wiper_front_side_note" attrs="{'readonly': [('state', '!=', 'draft')]}"
+                            />
+                            <separator/>
+                            <field name="wiper_back_side" attrs="{'readonly': [('state', '!=', 'draft')]}"
+                            />
+                            <field name="wiper_back_side_note" attrs="{'readonly': [('state', '!=', 'draft')]}"
+                            />
+                            <separator/>
+                            <field name="seat_cover" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="seat_cover_note" attrs="{'readonly': [('state', '!=', 'draft')]}"
+                            />
+                            <separator/>
+                            <field name="floor_inside_mat" attrs="{'readonly': [('state', '!=', 'draft')]}"
+                            />
+                            <field name="floor_inside_mat_note" attrs="{'readonly': [('state', '!=', 'draft')]}"
+                            />
+                            <separator/>
+                            <field name="mud_guard_front_ls_mat" attrs="{'readonly': [('state', '!=', 'draft')]}"
+                            />
+                            <field name="mud_guard_front_ls_mat_note" attrs="{'readonly': [('state', '!=', 'draft')]}"
+                            />
+                            <separator/>
+                            <field name="mud_guard_front_rs_mat" attrs="{'readonly': [('state', '!=', 'draft')]}"
+                            />
+                            <field name="mud_guard_front_rs_mat_note" attrs="{'readonly': [('state', '!=', 'draft')]}"
+                            />
+                            <separator/>
+                            <field name="mud_guard_rear_ls_mat" attrs="{'readonly': [('state', '!=', 'draft')]}"
+                            />
+                            <field name="mud_guard_rear_ls_mat_note" attrs="{'readonly': [('state', '!=', 'draft')]}"
+                            />
+                            <separator/>
+                            <field name="mud_guard_rear_rs_mat" attrs="{'readonly': [('state', '!=', 'draft')]}"
+                            />
+                            <field name="mud_guard_rear_rs_mat_note" attrs="{'readonly': [('state', '!=', 'draft')]}"
+                            />
+                            <separator/>
+                            <field name="tape_type" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="tape_type_note" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <separator/>
+                            <field name="cigarette_lighter" attrs="{'readonly': [('state', '!=', 'draft')]}"
+                            />
+                            <field name="cigarette_lighter_note" attrs="{'readonly': [('state', '!=', 'draft')]}"
+                            />
+                            <separator/>
+                            <field name="fire_extinguisher" attrs="{'readonly': [('state', '!=', 'draft')]}"
+                            />
+                            <field name="fire_extinguisher_note" attrs="{'readonly': [('state', '!=', 'draft')]}"
+                            />
+                            <separator/>
+                            <field name="vehicle_inside_light" attrs="{'readonly': [('state', '!=', 'draft')]}"
+                            />
+                            <field name="vehicle_inside_light_note" attrs="{'readonly': [('state', '!=', 'draft')]}"
+                            />
+                            <separator/>
+                            <field name="front_side_glass" attrs="{'readonly': [('state', '!=', 'draft')]}"
+                            />
+                            <field name="front_side_glass_note" attrs="{'readonly': [('state', '!=', 'draft')]}"
+                            />
+                            <separator/>
+                            <field name="rear_driver_back_side_glass" attrs="{'readonly': [('state', '!=', 'draft')]}"
+                            />
+                            <field name="rear_driver_back_side_glass_note"
+                                   attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <separator/>
+                            <field name="rear_ls_parking_light" attrs="{'readonly': [('state', '!=', 'draft')]}"
+                            />
+                            <field name="rear_ls_parking_light_note" attrs="{'readonly': [('state', '!=', 'draft')]}"
+                            />
+                            <separator/>
+                            <field name="rear_rs_parking_light" attrs="{'readonly': [('state', '!=', 'draft')]}"
+                            />
+                            <field name="rear_rs_parking_light_note" attrs="{'readonly': [('state', '!=', 'draft')]}"
+                            />
+                            <separator/>
+                            <field name="rear_ls_brake_light" attrs="{'readonly': [('state', '!=', 'draft')]}"
+                            />
+                            <field name="rear_ls_brake_light_note" attrs="{'readonly': [('state', '!=', 'draft')]}"
+                            />
+                            <separator/>
+                            <field name="rear_rs_brake_light" attrs="{'readonly': [('state', '!=', 'draft')]}"
+                            />
+                            <field name="rear_rs_brake_light_note" attrs="{'readonly': [('state', '!=', 'draft')]}"
+                            />
+                            <separator/>
+                            <field name="rear_left_signal_light" attrs="{'readonly': [('state', '!=', 'draft')]}"
+                            />
+                            <field name="rear_left_signal_light_note" attrs="{'readonly': [('state', '!=', 'draft')]}"
+                            />
+                            <separator/>
+                            <field name="rear_right_signal_light" attrs="{'readonly': [('state', '!=', 'draft')]}"
+                            />
+                            <field name="rear_right_signal_light_note"
+                                   attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                        </group>
+                    </group>
+                    <group string="Additional Criteria">
+                        <field name="motor_condition" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                        <field name="vehicle_outer_body_condition" attrs="{'readonly': [('state', '!=', 'draft')]}"
+                        />
+                    </group>
+                    <group string="Terms and Conditions">
+                        <field name="terms_conditions" nolabel="1"
+                               placeholder="Write here all other information relative to this transfer"
+                               attrs="{'readonly': [('state', '!=', 'draft')],}"/>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id='vehicle_transfer_tree_view' model='ir.ui.view'>
+        <field name="name">vehicle.transfer.tree.view</field>
+        <field name="model">vehicle.transfer</field>
+        <field name="arch" type="xml">
+            <tree>
+                <!--                <field name="active" invisible="1"/>-->
+                <field name="date" readonly="1"/>
+                <field name="reference" readonly="1"/>
+                <field name="name" readonly="1"/>
+                <field name="license_plate" readonly="1"/>
+                <field name="driver_name" readonly="1"/>
+                <field name="model_brand" readonly="1"/>
+                <field name="model_year" readonly="1"/>
+                <field name="chassis_number" readonly="1"/>
+                <field name="last_odometer" readonly="1"/>
+                <field name="company_id" readonly="1" optional="hide"/>
+                <field name="transfer_type" readonly="1"/>
+                <field name="state" widget="badge" decoration-primary="state == 'confirm'"
+                       decoration-success="state == 'approve'"
+                       decoration-muted="state=='close'"
+                       decoration-danger="state == 'cancel'" decoration-info="state == 'draft'"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="vehicle_transfer_graph_view" model="ir.ui.view">
+        <field name="name">vehicle.transfer.graph.view</field>
+        <field name="model">vehicle.transfer</field>
+        <field name="arch" type="xml">
+            <graph string="Vehicle Transfer Graph" type="bar">
+                <field name="transfer_type"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="vehicle_transfer_search_view" model="ir.ui.view">
+        <field name="name">vehicle.transfer.search.view</field>
+        <field name="model">vehicle.transfer</field>
+        <field name="arch" type="xml">
+            <search string="Vehicle Transfer">
+
+                <field name="reference" filter_domain="[('reference', 'ilike', self)]"/>
+                <field name="driver_name" filter_domain="[('driver_name', 'ilike', self)]"/>
+                <field name="license_plate" filter_domain="[('license_plate', 'ilike', self)]"/>
+
+                <filter string="Vehicle Delivery" name="transfer_type" domain="[('transfer_type', '=', 'delivery')]"/>
+                <filter string="Vehicle Return" name="transfer_type" domain="[('transfer_type', '=', 'return')]"/>
+                <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>
+                <filter string="Confirmed" name="confirm" domain="[('state', '=', 'confirm')]"/>
+                <filter string="Approved" name="approve" domain="[('state', '=', 'approve')]"/>
+                <filter string="Cancelled" name="Cancel" domain="[('state', '=', 'cancel')]"/>
+                <separator/>
+                <filter string="Closed" name="close" domain="[('state', '=', 'close')]"/>
+
+
+                <group expand="1" string="Group By">
+                    <filter string="Reference" name="reference" context="{'group_by':'reference'}"/>
+                    <filter string="Transfer Type" name="transfer_type" context="{'group_by':'transfer_type'}"/>
+                    <filter string="Driver" name="driver" context="{'group_by':'driver_name'}"/>
+                    <filter string="License Plate" name="license_plate" context="{'group_by':'license_plate'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id='fleet_vehicle_transfer_action' model='ir.actions.act_window'>
+        <field name="name">Vehicle Transfers</field>
+        <field name="res_model">vehicle.transfer</field>
+        <field name="view_mode">tree,graph,pivot,form</field>
+        <field name="context">{'group_by': 'reference'}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new vehicle delivery
+            </p>
+        </field>
+    </record>
+
+
+    <!--    <menuitem id="fleet_vehicle_transfer_and_return" name="Vehicle Transfers" sequence="3" parent="fleet.menu_root">-->
+    <menuitem
+            name="Vehicle Transfers"
+            id="fleet_vehicle_transfer_menu"
+            parent="fleet.menu_root"
+            action="fleet_vehicle_transfer_action"
+            groups="fleet.fleet_group_user"
+            sequence="3"/>
+    <!--    </menuitem>-->
+</odoo>
