@@ -18,5 +18,5 @@ class HrContract(models.Model):
             total_overtime3 = record.wage / 208 * (record.worked_hour3 * 2)
             total_overtime4 = record.wage / 208 * (record.worked_hour4 * 2.5)
 
-            record.total_overtime = total_overtime1 + total_overtime2 + total_overtime3 + total_overtime4
-            record.x_add_overtime = record.total_overtime
+            #record.total_overtime = total_overtime1 + total_overtime2 + total_overtime3 + total_overtime4
+            #record.x_add_overtime = record.total_overtime
